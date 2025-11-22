@@ -10,12 +10,16 @@ st.set_page_config(page_title="B2 First Master", page_icon="🎓", layout="wide"
 with st.sidebar:
     st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Google_Gemini_logo.svg/2560px-Google_Gemini_logo.svg.png", width=150)
     st.title("🚀 Lộ trình B2 (179+)")
-    
-    # Nhập API Key
-    api_key = st.text_input("Nhập Gemini API Key của bạn:", type="password")
-    if api_key:
-        genai.configure(api_key=api_key)
+    # Đọc Key từ Biến Môi Trường (Streamlit Secrets)
+try:
+    if 'GEMINI_API_KEY' in st.secrets:
+        genai.configure(api_key=st.secrets['GEMINI_API_KEY'])
         model = genai.GenerativeModel('gemini-pro')
+    else:
+        st.error("⚠️ Vui lòng cấu hình GEMINI_API_KEY trong Streamlit Secrets.")
+
+except Exception as e:
+    st.error(f"Lỗi cấu hình AI: {e}")
     
     menu = st.radio("Chọn tính năng:", ["🏠 Dashboard", "✍️ Writing Coach", "🧠 Smart Vocab", "📝 Quick Quiz"])
     
